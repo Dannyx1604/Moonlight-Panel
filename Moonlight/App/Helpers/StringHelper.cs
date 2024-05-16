@@ -43,4 +43,48 @@ public static class StringHelper
 
         return firstChar + restOfString;
     }
+
+    public static string CutInHalf(string input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return input;
+        
+        int length = input.Length;
+        int halfLength = length / 2;
+
+        return input.Substring(0, halfLength);
+    }
+
+    public static bool EndsInOneOf(string suffix, IEnumerable<string> strings)
+    {
+        foreach (string str in strings)
+        {
+            if (suffix.EndsWith(str))
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    public static bool ContainsOneOf(string textToSearch, IEnumerable<string> strings, out string foundText)
+    {
+        foreach (string str in strings)
+        {
+            if (textToSearch.Contains(str))
+            {
+                foundText = str;
+                return true;
+            }
+        }
+
+        foundText = "";
+        return false;
+    }
+    
+    public static bool ContainsOneOf(string textToSearch, IEnumerable<string> strings)
+    {
+        return ContainsOneOf(textToSearch, strings, out _);
+    }
 }

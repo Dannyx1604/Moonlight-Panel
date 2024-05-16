@@ -407,6 +407,20 @@ public static class Permissions
         Name = "Admin security ddos",
         Description = "Manage the integrated ddos protection"
     };
+    
+    public static Permission AdminChangelog = new()
+    {
+        Index = 60,
+        Name = "Admin changelog",
+        Description = "View the changelog"
+    };
+    
+    public static Permission AdminStatisticsLive = new()
+    {
+        Index = 61,
+        Name = "Admin statistics live",
+        Description = "View the live statistics"
+    };
 
     public static Permission? FromString(string name)
     {

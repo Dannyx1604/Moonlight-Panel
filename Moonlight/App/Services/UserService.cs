@@ -21,6 +21,7 @@ public class UserService
     private readonly DateTimeService DateTimeService;
     private readonly ConfigService ConfigService;
     private readonly TempMailService TempMailService;
+    private readonly MoonlightService MoonlightService;
 
     private readonly string JwtSecret;
 
@@ -32,7 +33,8 @@ public class UserService
         IdentityService identityService,
         IpLocateService ipLocateService,
         DateTimeService dateTimeService,
-        TempMailService tempMailService)
+        TempMailService tempMailService,
+        MoonlightService moonlightService)
     {
         UserRepository = userRepository;
         TotpService = totpService;
@@ -42,6 +44,7 @@ public class UserService
         IpLocateService = ipLocateService;
         DateTimeService = dateTimeService;
         TempMailService = tempMailService;
+        MoonlightService = moonlightService;
 
         JwtSecret = configService
             .Get()
@@ -58,6 +61,19 @@ public class UserService
             Logger.Warn($"A user tried to use a blacklisted domain to register. Email: '{email}'", "security");
             throw new DisplayException("This email is blacklisted");
         }
+
+        if (ConfigService.Get().Moonlight.Auth.BlockLinuxUsers && IdentityService.Device.Contains("Linux"))
+            throw new DisplayException("This operation was disabled");
+
+        if (ConfigService.Get().Moonlight.Auth.CheckForBots)
+        {
+            var isABot = await IdentityService.GetBotStatus();
+
+            if (isABot)
+            {
+                throw new DisplayException("This operation was disabled");
+            }
+        }
         
         // Check if the email is already taken
         var emailTaken = UserRepository.Get().FirstOrDefault(x => x.Email == email) != null;
@@ -67,11 +83,21 @@ public class UserService
             throw new DisplayException("The email is already in use");
         }
 
+        bool admin = false;
+
+        if (!UserRepository.Get().Any())
+        {
+            if ((DateTime.UtcNow - MoonlightService.StartTimestamp).TotalMinutes < 15)
+                admin = true;
+            else
+                throw new DisplayException("You have to register within 15 minutes after the start of moonlight to get admin permissions. Please restart moonlight in order to register as admin. Please note that this will only works once and will be deactivated after a admin has registered");
+        }
+
         // Add user
         var user = UserRepository.Add(new()
         {
             Address = "",
-            Admin = !UserRepository.Get().Any(),
+            Admin = admin,
             City = "",
             Country = "",
             Email = email.ToLower(),
@@ -106,7 +132,7 @@ public class UserService
 
         if (user == null)
         {
-            Logger.Warn($"Failed login attempt. Email: {email} Password: {password}", "security");
+            Logger.Warn($"Failed login attempt. Email: {email} Password: {StringHelper.CutInHalf(password)}", "security");
             throw new DisplayException("Email and password combination not found");
         }
 
@@ -115,7 +141,7 @@ public class UserService
             return user.TotpEnabled;
         }
 
-        Logger.Warn($"Failed login attempt. Email: {email} Password: {password}", "security");
+        Logger.Warn($"Failed login attempt. Email: {email} Password: {StringHelper.CutInHalf(password)}", "security");
         throw new DisplayException("Email and password combination not found");;
     }
 
@@ -148,7 +174,7 @@ public class UserService
             }
             else
             {
-                Logger.Warn($"Failed login attempt. Email: {email} Password: {password}", "security");
+                Logger.Warn($"Failed login attempt. Email: {email} Password: {StringHelper.CutInHalf(password)}", "security");
                 throw new DisplayException("2FA code invalid");
             }
         }
@@ -190,7 +216,7 @@ public class UserService
 
         if (user == null)
         {
-            Logger.Warn($"Detected an sftp bruteforce attempt. ID: {id} Password: {password}", "security");
+            Logger.Warn($"Detected an sftp bruteforce attempt. ID: {id} Password: {StringHelper.CutInHalf(password)}", "security");
             
             throw new Exception("Invalid username");
         }
@@ -201,7 +227,7 @@ public class UserService
             return user;
         }
         
-        Logger.Warn($"Detected an sftp bruteforce attempt. ID: {id} Password: {password}", "security");
+        Logger.Warn($"Detected an sftp bruteforce attempt. ID: {id} Password: {StringHelper.CutInHalf(password)}", "security");
         throw new Exception("Invalid userid or password");
     }
 

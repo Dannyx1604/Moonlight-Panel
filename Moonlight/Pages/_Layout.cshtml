@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web
 @using Moonlight.App.Extensions
 @using Moonlight.App.Repositories
 @using Moonlight.App.Services
@@ -41,7 +41,6 @@
 
     <link rel="stylesheet" type="text/css" href="/assets/css/style.bundle.css"/>
     <link rel="stylesheet" type="text/css" href="/assets/css/flashbang.css"/>
-    <link rel="stylesheet" type="text/css" href="/assets/css/snow.css"/>
     <link rel="stylesheet" type="text/css" href="/assets/css/utils.css"/>
     <link rel="stylesheet" type="text/css" href="/assets/css/boxicons.min.css"/>
     <link rel="stylesheet" type="text/css" href="/assets/css/blazor.css"/>
@@ -49,9 +48,8 @@
     <link rel="stylesheet" type="text/css" href="/_content/XtermBlazor/XtermBlazor.css"/>
     <link rel="stylesheet" type="text/css" href="/_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.css"/>
     <link rel="stylesheet" type="text/css" href="/_content/Blazor.ContextMenu/blazorContextMenu.min.css"/>
-
-    <link href="/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css"/>
-
+    <link rel="stylesheet" type="text/css" href="/assets/css/toastr.css"/>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <base href="~/"/>
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered"/>
@@ -96,31 +94,38 @@
     </div>
 </div>
 
-<script src="/assets/plugins/global/plugins.bundle.js"></script>
+<script src="/assets/js/popper.min.js"></script>
+<script src="/assets/js/bootstrap.min.js"></script>
+
+<script src="/_content/Blazor-ApexCharts/js/apex-charts.min.js"></script>
+<script src="/_content/Blazor-ApexCharts/js/blazor-apex-charts.js"></script>
+
 <script src="/_content/XtermBlazor/XtermBlazor.min.js"></script>
 <script src="/_content/BlazorTable/BlazorTable.min.js"></script>
 <script src="/_content/CurrieTechnologies.Razor.SweetAlert2/sweetAlert2.min.js"></script>
 <script src="/_content/Blazor.ContextMenu/blazorContextMenu.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@@shopify/draggable@1.0.0-beta.11/lib/draggable.bundle.js"></script>
+<script src="/assets/js/draggable.bundle.js"></script>
 
 <script src="https://www.google.com/recaptcha/api.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.7.0/lib/xterm-addon-fit.min.js"></script>
+<script src="/assets/js/xterm-addon-fit.min.js"></script>
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/toastr.min.js"></script>
+
+<script src="/assets/js/apexcharts.js"></script>
 
 <script src="/_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js"></script>
 <script>require.config({ paths: { 'vs': '/_content/BlazorMonaco/lib/monaco-editor/min/vs' } });</script>
 <script src="/_content/BlazorMonaco/lib/monaco-editor/min/vs/editor/editor.main.js"></script>
 <script src="/_content/BlazorMonaco/jsInterop.js"></script>
 
-<script src="/assets/js/scripts.bundle.js"></script>
 <script src="/assets/js/moonlight.js"></script>
 
 <script>
 moonlight.loading.registerXterm();
 </script>
 
-<script src="_content/Blazor-ApexCharts/js/apex-charts.min.js"></script>
 <script src="_content/Blazor-ApexCharts/js/blazor-apex-charts.js"></script>
 
 <script src="/_framework/blazor.server.js"></script>
